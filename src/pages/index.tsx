@@ -1,19 +1,25 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { HomeView } from "../views";
+import React from "react";
+import { Header } from "@components/layout/header";
+import { PageContainer } from "@components/layout/page-container";
+import { HomeContent } from "@components/home/home-content";
 
 const Home: NextPage = (props) => {
   return (
-    <div>
+    <>
       <Head>
-        <title>Caw Caw!</title>
+        <title>NextJS Solana Starter Kit</title>
         <meta
           name="description"
-          content="This site will fly high 🦤"
+          content="Everything you need to start your Solana dApp"
         />
       </Head>
-      <HomeView />
-    </div>
+      <PageContainer>
+        <Header />
+        <HomeContent />
+      </PageContainer>
+    </>
   );
 };
 

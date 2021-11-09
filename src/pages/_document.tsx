@@ -7,7 +7,7 @@ class MyDocument extends Document {
         <Head>
           <meta
             name="description"
-            content="This site will fly high 🦤"
+            content="Everything you need to start your Solana dApp"
           />
           <link rel="icon" href="/favicon.ico" />
 
@@ -29,18 +29,6 @@ class MyDocument extends Document {
             href="/favicon-16x16.png"
           />
           <link rel="manifest" href="/site.webmanifest" />
-          {/* <meta name="theme-color" content="#ffffff" /> */}
-
-          {/* <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="crossOrigin"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500&display=swap"
-            rel="stylesheet"
-          /> */}
         </Head>
         <body>
           <Main />

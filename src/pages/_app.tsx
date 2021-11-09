@@ -5,16 +5,15 @@ import { ConnectionProvider } from "@solana/wallet-adapter-react";
 import { clusterApiUrl } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
-import 'tailwindcss/tailwind.css';
-import '../styles/globals.css';
+// import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
 import "../styles/App.css";
 
-const SOLANA_NETWORK = WalletAdapterNetwork.Mainnet;
-// const SOLANA_NETWORK = WalletAdapterNetwork.Devnet;
-const network = SOLANA_NETWORK;
+// Please choose the right network for your app
+const network = WalletAdapterNetwork.Mainnet;
 
 const WalletProvider = dynamic(
-  () => import("../contexts/ClientWalletProvider"),
+  () => import("@components/contexts/ClientWalletProvider"),
   {
     ssr: false,
   }
@@ -24,11 +23,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const endpoint = useMemo(() => clusterApiUrl(network), []);
 
   return (
-      <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider>
-          <Component {...pageProps} />
-        </WalletProvider>
-      </ConnectionProvider>
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider>
+        <Component {...pageProps} />
+      </WalletProvider>
+    </ConnectionProvider>
   );
 }
 

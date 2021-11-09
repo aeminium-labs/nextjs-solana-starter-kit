@@ -1,14 +1,10 @@
-# Create Solana Dapp with Next.JS
-
-https://user-images.githubusercontent.com/188568/137521416-7274837b-6969-4cfc-ba25-84a560f124df.mov
-
-
-## 🛵 ◍	Demo: https://create-dapp-solana-nextjs.vercel.app/
+# Build your own Solana dApp with NextJS
 
 This project includes:
 - Next.JS 
 - TypeScript
 - [@solana/wallet-adapter](https://github.com/solana-labs/wallet-adapter) and [@solana/web3.js](https://solana-labs.github.io/solana-web3.js) for interactions with wallets & blockchain.
+- [@metaplex/js](https://github.com/metaplex/js) for interactions with metadata
 - Tailwind CSS (with [daisyUI](https://daisyui.com/))
 
 ## Getting Started
@@ -19,9 +15,6 @@ First, run the development server:
 yarn
 yarn run dev
 ```
-
-// TODO
-If you deploy new Candy Machine you can update UI config here: `./src/config/candy-machine.config.js`.
 
 ## Style
 
