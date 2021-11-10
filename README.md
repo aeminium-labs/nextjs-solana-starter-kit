@@ -18,10 +18,9 @@ This starter kit was only possible because of the amazing https://github.com/thu
 
 ## Getting Started
 
-1. Click on "Use this template" button or just fork this repository
-2. Run `yarn` to install dependencies
-3. Run `yarn dev` to start dev server
-4. Make changes and have fun!
+1. Run `yarn create next-app -e https://github.com/braposo/nextjs-solana-starter-kit` (can also click on the "Use this template" button or just fork this repository)
+2. Run `yarn dev` to start dev server
+3. Make changes and have fun!
 
 ## Style
 
