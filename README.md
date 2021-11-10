@@ -1,20 +1,27 @@
-# Build your own Solana dApp with NextJS
+# Build your own Solana dApp with NextJS and TypeScript
 
-This project includes:
-- Next.JS 
-- TypeScript
+![image](https://user-images.githubusercontent.com/38172/141033503-812a801d-44bb-4205-862c-d3fc50812113.png)
+
+This kit contains everything you need to get started with Solana dApps.
+
+Connect to a wallet, verify its ownership, list stored NFTs and even fetch associated Twitter handle if [registered](https://naming.bonfida.org/#/twitter-registration)!
+
+🚨 **Live demo: https://nextjs-solana-starter-kit.vercel.app/** 🚨
+
+What's included:
 - [@solana/wallet-adapter](https://github.com/solana-labs/wallet-adapter) and [@solana/web3.js](https://solana-labs.github.io/solana-web3.js) for interactions with wallets & blockchain.
 - [@metaplex/js](https://github.com/metaplex/js) for interactions with metadata
+- [@solana/spl-name-service](https://github.com/solana-labs/solana-program-library/tree/master/name-service) for resolving addresses to domain/twitter
 - Tailwind CSS (with [daisyUI](https://daisyui.com/))
+
+This starter kit was only possible because of the amazing https://github.com/thuglabs/create-dapp-solana-nextjs template, which served as a base for everything else in here.
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-yarn
-yarn run dev
-```
+1. Fork this repository
+2. Run `yarn` to install dependencies
+3. Run `yarn dev` to start dev server
+4. Make changes and have fun!
 
 ## Style
 
@@ -23,14 +30,9 @@ yarn run dev
 You can quickly change theme changing `daisy.themes` within `./tailwind.config.js`.
 More info here: https://daisyui.com/docs/default-themes
 
-This app encourage you to use CSS Modules over other style technics (like SASS/LESS, Styled Components, usual CSS).
-It have modular nature and supports modern CSS. [Read more on Next.JS site](https://nextjs.org/docs/basic-features/built-in-css-support). 
-Anyway, if you want to connect LESS there is example code in `./next.config.js`
 
+## Deploying
 
-## Deploy on Vercel
-
-Before push run localy `npm run build` to make sure app can be build succesffully on vercel .
-
-Vercel will automatically create environment and deployment for you if you have vercel account connected to your GitHub account. Go to the vercel.com to connect it.
-Then any push to `main` branch will automatically rebuild and redploy app.
+1. Run `yarn build` locally to make sure everything is compiling correctly
+2. Link your favourite server provider to your repository (using Vercel for the demo)
+3. Any push to `main` branch should automatically deploy a new version
