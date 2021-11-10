@@ -1,8 +1,8 @@
+import { NETWORK } from "./../../../utils/endpoints";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { PublicKey } from "@solana/web3.js";
 import { programs, Connection } from "@metaplex/js";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 export type ItemData = {
   key: string;
@@ -18,7 +18,7 @@ export default async function handler(
 
   if (key.length > 0) {
     const walletAddress = new PublicKey(key);
-    const connection = new Connection(WalletAdapterNetwork.Mainnet);
+    const connection = new Connection(NETWORK);
     const { Metadata } = programs.metadata;
 
     const getTokensForWallet = async (walletAddress: PublicKey) => {

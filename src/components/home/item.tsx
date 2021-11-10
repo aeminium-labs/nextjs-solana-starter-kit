@@ -12,7 +12,7 @@ export function Item({ data }: Props) {
   const name = data.metadata?.data.data.name;
   const metadataURI = data.metadata?.data.data.uri;
   const { data: metadata } = useDataFetch<MetadataJson>(
-    metadataURI ? [`/api/metadata/?uri=${metadataURI}`, metadataURI] : null
+    metadataURI ? [`/api/metadata?uri=${metadataURI}`, metadataURI] : null
   );
 
   const collection = metadata?.collection?.name;

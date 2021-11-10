@@ -23,14 +23,13 @@ export function HomeContent() {
 
   const onClick = async () => {
     if (publicKey && signMessage) {
-      console.log(state);
       if (state !== "success") {
         setState("verifying");
       }
 
       try {
         // Encode anything as bytes
-        const messageStr = "This is a custom message";
+        const messageStr = "This can be anything you want!";
         const message = new TextEncoder().encode(messageStr);
 
         // Sign the bytes using the wallet
