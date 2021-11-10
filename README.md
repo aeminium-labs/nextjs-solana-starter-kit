@@ -1,6 +1,6 @@
 # Build your own Solana dApp with NextJS and TypeScript
 
-![image](https://user-images.githubusercontent.com/38172/141033503-812a801d-44bb-4205-862c-d3fc50812113.png)
+![Screenshot from 2021-11-10 02-03-57](https://user-images.githubusercontent.com/38172/141036336-194a983d-fc05-4b2d-acd3-3dff221f5328.png)
 
 This kit contains everything you need to get started with Solana dApps.
 
@@ -18,7 +18,7 @@ This starter kit was only possible because of the amazing https://github.com/thu
 
 ## Getting Started
 
-1. Fork this repository
+1. Click on "Use this template" button or just fork this repository
 2. Run `yarn` to install dependencies
 3. Run `yarn dev` to start dev server
 4. Make changes and have fun!
