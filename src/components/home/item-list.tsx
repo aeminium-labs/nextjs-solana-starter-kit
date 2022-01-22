@@ -1,6 +1,6 @@
 import { Item } from "@components/home/item";
 import React from "react";
-import { ItemData } from "@pages/api/items/[key]";
+import { ItemData } from "@pages/api/items/[address]";
 
 type Props = {
   items: Array<ItemData> | undefined;

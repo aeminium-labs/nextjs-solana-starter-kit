@@ -1,4 +1,4 @@
-import { NETWORK } from "./../../../utils/endpoints";
+import { NETWORK } from "@utils/endpoints";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { PublicKey } from "@solana/web3.js";
@@ -14,10 +14,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Array<ItemData>>
 ) {
-  const { key } = req.query;
+  const { address } = req.query;
 
-  if (key.length > 0) {
-    const walletAddress = new PublicKey(key);
+  if (address.length > 0) {
+    const walletAddress = new PublicKey(address);
     const connection = new Connection(NETWORK);
     const { Metadata } = programs.metadata;
 
@@ -47,13 +47,15 @@ export default async function handler(
 
           return {
             key: mintKey.toString(),
-            amount: parseInt(accountInfo.tokenAmount.amount),
+            amount: parseInt(accountInfo.tokenAmount.uiAmount),
+            decimals: parseInt(accountInfo.tokenAmount.decimals),
             metadata,
           };
         } catch (e) {
           return {
             key: mintKey.toString(),
-            amount: 0,
+            amount: -1,
+            decimals: -1,
           };
         }
       })
@@ -62,7 +64,7 @@ export default async function handler(
     // Very naively assume that anything that isn't 1 might not be a NFT
     // so we filter that out
     const filteredTokens = parsedTokens
-      .filter((item) => item.amount === 1)
+      .filter((item) => item.amount === 1 && item.decimals === 0)
       .sort((a, b) => {
         if (a.metadata && b.metadata) {
           return a.metadata.data.data.name.localeCompare(

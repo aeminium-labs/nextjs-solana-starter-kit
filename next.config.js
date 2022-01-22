@@ -39,7 +39,16 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["arweave.net", "www.arweave.net"],
+    domains: [
+      "arweave.net",
+      "www.arweave.net",
+      "trashypandas.mypinata.cloud",
+      "assets.tiexo.com",
+      "www.panzerdogs.io",
+      "sol-parasites.s3.us-west-2.amazonaws.com",
+      "ipfs.io",
+      "testlaunchmynft.mypinata.cloud",
+    ],
   },
 };
 

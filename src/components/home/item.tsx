@@ -1,5 +1,5 @@
 import React from "react";
-import { ItemData } from "@pages/api/items/[key]";
+import { ItemData } from "@pages/api/items/[address]";
 import Image from "next/image";
 import { useDataFetch } from "@utils/use-data-fetch";
 import { MetadataJson } from "@metaplex/js";

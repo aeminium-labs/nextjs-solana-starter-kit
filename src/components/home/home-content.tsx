@@ -1,7 +1,7 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import React from "react";
 import { useDataFetch } from "@utils/use-data-fetch";
-import { ItemData } from "@pages/api/items/[key]";
+import { ItemData } from "@pages/api/items/[address]";
 import { ItemList } from "@components/home/item-list";
 import { SignButton } from "@components/home/sign-button";
 import bs58 from "bs58";
