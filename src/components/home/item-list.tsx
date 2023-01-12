@@ -1,6 +1,5 @@
-import { Item } from "@components/home/item";
+import { Item, ItemData } from "@components/home/item";
 import React from "react";
-import { ItemData } from "@pages/api/items/[address]";
 
 type Props = {
   items: Array<ItemData> | undefined;
@@ -13,9 +12,11 @@ export function ItemList({ items }: Props) {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {items.map((item) => (
-        <Item data={item} key={item.key} />
-      ))}
+      {items.length === 0 ? (
+        <p className="p-4">No NFTs in your wallet</p>
+      ) : (
+        items.map((item) => <Item data={item} key={item.tokenAddress} />)
+      )}
     </div>
   );
 }

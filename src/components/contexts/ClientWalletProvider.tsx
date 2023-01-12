@@ -3,9 +3,7 @@ import { WalletProvider } from "@solana/wallet-adapter-react";
 
 import {
   PhantomWalletAdapter,
-  SlopeWalletAdapter,
-  SolflareWalletAdapter,
-  SolletWalletAdapter,
+  BackpackWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { useMemo } from "react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
@@ -17,12 +15,7 @@ export function ClientWalletProvider(
   props: Omit<WalletProviderProps, "wallets">
 ): JSX.Element {
   const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new SlopeWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new SolletWalletAdapter(),
-    ],
+    () => [new PhantomWalletAdapter(), new BackpackWalletAdapter()],
     [NETWORK]
   );
 

@@ -1,9 +1,9 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import React from "react";
 import { useDataFetch } from "@utils/use-data-fetch";
-import { ItemData } from "@pages/api/items/[address]";
 import { ItemList } from "@components/home/item-list";
 import { SignButton } from "@components/home/sign-button";
+import { ItemData } from "@components/home/item";
 import bs58 from "bs58";
 
 export function HomeContent() {
@@ -75,27 +75,23 @@ export function HomeContent() {
     <div className="grid grid-cols-1">
       <div className="text-center">
         {publicKey ? (
-          <div className="card shadow-xl bg-neutral mb-5">
-            <div className="card-body ">
-              <h2 className="card-title">Your address</h2>
-              <p>{publicKey.toBase58()}</p>
-              <SignButton state={state} onClick={onClick} />
+          state !== "success" && (
+            <div className="card shadow-xl bg-neutral mb-5">
+              <div className="card-body items-center text-center">
+                <h2 className="card-title text-center">
+                  Please verify your wallet to see items
+                </h2>
+                <SignButton state={state} onClick={onClick} />
+              </div>
             </div>
-          </div>
+          )
         ) : (
           <p className="p-4">
             Please connect your wallet to get a list of your NFTs
           </p>
         )}
       </div>
-      {publicKey &&
-        (state === "success" ? (
-          <ItemList items={data} />
-        ) : (
-          <p className="text-center p-4">
-            Please verify your wallet to see items
-          </p>
-        ))}
+      {publicKey && state === "success" && data && <ItemList items={data} />}
     </div>
   );
 }
