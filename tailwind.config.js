@@ -8,7 +8,7 @@ module.exports = {
     styled: true,
     themes: [
       // first one will be the default theme
-      "dracula",
+      "night",
 
       // uncomment to enable
       // "light",

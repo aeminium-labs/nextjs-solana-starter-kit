@@ -2,30 +2,29 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import React from "react";
 import { useDataFetch } from "@utils/use-data-fetch";
 import { ItemList } from "@components/home/item-list";
-import { SignButton } from "@components/home/sign-button";
 import { ItemData } from "@components/home/item";
 import bs58 from "bs58";
+import { Button, ButtonState } from "@components/home/button";
+import { toast } from "react-hot-toast";
 
 export function HomeContent() {
   const { publicKey, signMessage } = useWallet();
+  const [signState, setSignState] = React.useState<ButtonState>("initial");
   const { data, error } = useDataFetch<Array<ItemData>>(
-    publicKey ? `/api/items/${publicKey}` : null
+    publicKey && signState === "success" ? `/api/items/${publicKey}` : null
   );
-  const [state, setState] = React.useState<
-    "initial" | "verifying" | "success" | "error"
-  >("initial");
 
+  // Reset the state
   React.useEffect(() => {
-    if (state !== "initial" && !publicKey) {
-      setState("initial");
+    if (signState !== "initial" && !publicKey) {
+      setSignState("initial");
     }
-  }, [publicKey]);
+  }, [signState, publicKey]);
 
-  const onClick = async () => {
-    if (publicKey && signMessage) {
-      if (state !== "success") {
-        setState("verifying");
-      }
+  const onSignClick = async () => {
+    if (publicKey && signMessage && signState !== "loading") {
+      setSignState("loading");
+      const signToastId = toast.loading("Signing message...");
 
       try {
         // Encode anything as bytes
@@ -49,12 +48,19 @@ export function HomeContent() {
         });
 
         if (response.status === 200) {
-          setState("success");
+          setSignState("success");
+          toast.success("Message signed", { id: signToastId });
         } else {
-          setState("error");
+          setSignState("error");
+          toast.error("Error verifying wallet, please try again", {
+            id: signToastId,
+          });
         }
       } catch (error: any) {
-        setState("error");
+        setSignState("error");
+        toast.error("Error verifying wallet, please try again", {
+          id: signToastId,
+        });
       }
     }
   };
@@ -67,7 +73,7 @@ export function HomeContent() {
     );
   }
 
-  if (publicKey && !data) {
+  if (publicKey && signState === "success" && !data) {
     return <p className="text-center p-4">Loading wallet information...</p>;
   }
 
@@ -75,13 +81,19 @@ export function HomeContent() {
     <div className="grid grid-cols-1">
       <div className="text-center">
         {publicKey ? (
-          state !== "success" && (
-            <div className="card shadow-xl bg-neutral mb-5">
+          signState !== "success" && (
+            <div className="card border-2 border-primary mb-5">
               <div className="card-body items-center text-center">
-                <h2 className="card-title text-center">
+                <h2 className="card-title text-center mb-2">
                   Please verify your wallet to see items
                 </h2>
-                <SignButton state={state} onClick={onClick} />
+                <Button
+                  state={signState}
+                  onClick={onSignClick}
+                  className="btn-primary"
+                >
+                  Verify wallet
+                </Button>
               </div>
             </div>
           )
@@ -91,7 +103,9 @@ export function HomeContent() {
           </p>
         )}
       </div>
-      {publicKey && state === "success" && data && <ItemList items={data} />}
+      {publicKey && signState === "success" && data && (
+        <ItemList items={data} />
+      )}
     </div>
   );
 }

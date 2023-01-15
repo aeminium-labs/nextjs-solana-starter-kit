@@ -1,8 +1,8 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "react-hooks/rules-of-hooks": 0,
-    "react-hooks/exhaustive-deps": 0,
+    "react-hooks/rules-of-hooks": 1,
+    "react-hooks/exhaustive-deps": 1,
     "@next/next/no-img-element": 0
   }
 }
