@@ -19,7 +19,7 @@ This starter kit was only possible because of the amazing https://github.com/thu
 ## Getting Started
 
 1. Get an API key from [Helius](https://helius.xyz/)
-2. Run `npx create-next-app -e https://github.com/braposo/nextjs-solana-starter-kit` (can also click on the "Use this template" button or just fork this repository)
+2. Run `npx create-next-app -e https://github.com/moon-landing-crew/nextjs-solana-starter-kit` (can also click on the "Use this template" button or just fork this repository)
 3. Add a `.env.local` file with your Helius API key
 
 ```
