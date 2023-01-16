@@ -1,9 +1,10 @@
+import { DEFAULT_THEME } from "@utils/globals";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
 class MyDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html data-theme={DEFAULT_THEME}>
         <Head>
           <meta
             name="description"

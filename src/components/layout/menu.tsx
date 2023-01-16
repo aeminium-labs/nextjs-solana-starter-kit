@@ -1,4 +1,5 @@
 import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import classNames from "classnames";
 
 type Props = {
@@ -10,40 +11,41 @@ export function Menu({ twitterHandle, className }: Props) {
   const { connected } = useWallet();
   const menuClasses = classNames("menu", className);
 
-  if (!connected) {
-    return null;
-  }
-
   return (
     <ul className={menuClasses}>
-      {twitterHandle && (
-        <li className="rounded-box">
-          <a
-            href={`https://www.twitter.com/${twitterHandle}`}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
-          >
-            @{twitterHandle}
-          </a>
-        </li>
+      {connected && (
+        <>
+          {twitterHandle && (
+            <li className="rounded-box">
+              <a
+                href={`https://www.twitter.com/${twitterHandle}`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
+              >
+                @{twitterHandle}
+              </a>
+            </li>
+          )}
+          <li>
+            <label
+              htmlFor="bonk-modal"
+              className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
+            >
+              Send $Bonk
+            </label>
+          </li>
+          <li>
+            <label
+              htmlFor="sol-modal"
+              className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
+            >
+              Send SOL
+            </label>
+          </li>
+        </>
       )}
-      <li>
-        <label
-          htmlFor="bonk-modal"
-          className="btn-ghost lg:btn mb-1 lg:mr1 lg:mb-0"
-        >
-          Send $Bonk
-        </label>
-      </li>
-      <li>
-        <label
-          htmlFor="sol-modal"
-          className="btn-ghost lg:btn mb-1 lg:mr1 lg:mb-0"
-        >
-          Send SOL
-        </label>
-      </li>
+      <WalletMultiButton className="btn" />
     </ul>
   );
 }

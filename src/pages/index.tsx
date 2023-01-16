@@ -48,20 +48,18 @@ const Home: NextPage = () => {
 
         try {
           // Create transaction
-          let txCreateResponse = await fetch(
-            isToken ? "/api/tx/createToken" : "/api/tx/create",
-            {
-              method: "POST",
-              body: JSON.stringify({
-                payerAddress: publicKey.toBase58(),
-                receiverAddress: address
-                  ? new PublicKey(address).toBase58()
-                  : undefined,
-                amount: amount,
-              }),
-              headers: { "Content-type": "application/json; charset=UTF-8" },
-            }
-          );
+          let txCreateResponse = await fetch("/api/tx/create", {
+            method: "POST",
+            body: JSON.stringify({
+              payerAddress: publicKey.toBase58(),
+              receiverAddress: address
+                ? new PublicKey(address).toBase58()
+                : undefined,
+              amount: amount,
+              type: isToken ? "token" : "sol",
+            }),
+            headers: { "Content-type": "application/json; charset=UTF-8" },
+          });
 
           if (txCreateResponse.status === 200) {
             const createData: TxCreateData = await txCreateResponse.json();

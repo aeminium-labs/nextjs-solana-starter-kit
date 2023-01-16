@@ -1,4 +1,5 @@
 import { Button, ButtonState } from "@components/home/button";
+import { DEFAULT_WALLET } from "@utils/globals";
 import React from "react";
 
 type Props = {
@@ -33,7 +34,7 @@ export function Modal({
             </label>
             <input
               type="text"
-              placeholder="GxPBmNcSLABrob3HAhzKGYwQZSnEr6Q37T9YJdphu5y2"
+              placeholder={DEFAULT_WALLET}
               className="input input-bordered w-full"
               onChange={(ev) => setAddress(ev.currentTarget.value)}
             />

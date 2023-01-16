@@ -13,13 +13,15 @@ export function HomeContent() {
   const { data, error } = useDataFetch<Array<ItemData>>(
     publicKey && signState === "success" ? `/api/items/${publicKey}` : null
   );
+  const prevPublickKey = React.useRef<string>(publicKey?.toBase58() || "");
 
-  // Reset the state
+  // Reset the state if wallet changes or disconnects
   React.useEffect(() => {
-    if (signState !== "initial" && !publicKey) {
+    if (publicKey && publicKey.toBase58() !== prevPublickKey.current) {
+      prevPublickKey.current === publicKey.toBase58();
       setSignState("initial");
     }
-  }, [signState, publicKey]);
+  }, [publicKey]);
 
   // This will request a signature automatically but you can have a separate button for that
   React.useEffect(() => {
@@ -86,37 +88,42 @@ export function HomeContent() {
     return <p className="text-center p-4">Loading wallet information...</p>;
   }
 
+  const hasFetchedData = publicKey && signState === "success" && data;
+
   return (
     <div className="grid grid-cols-1">
-      <div className="text-center">
-        {!publicKey && (
-          <div className="card border-2 border-primary mb-5">
-            <div className="card-body items-center text-center">
-              <h2 className="card-title text-center mb-2">
-                Please connect your wallet to get a list of your NFTs
-              </h2>
+      {hasFetchedData ? (
+        <div>
+          <ItemList items={data} />
+        </div>
+      ) : (
+        <div className="text-center">
+          {!publicKey && (
+            <div className="card border-2 border-primary mb-5">
+              <div className="card-body items-center">
+                <h2 className="card-title text-center text-primary mb-2">
+                  Please connect your wallet to get a list of your NFTs
+                </h2>
+              </div>
             </div>
-          </div>
-        )}
-        {publicKey && signState === "error" && (
-          <div className="card border-2 border-primary mb-5">
-            <div className="card-body items-center text-center">
-              <h2 className="card-title text-center mb-2">
-                Please verify your wallet manually
-              </h2>
-              <Button
-                state={signState}
-                onClick={onSignClick}
-                className="btn-primary"
-              >
-                Verify wallet
-              </Button>
+          )}
+          {publicKey && signState === "error" && (
+            <div className="card border-2 border-primary mb-5">
+              <div className="card-body items-center text-center">
+                <h2 className="card-title text-center mb-2">
+                  Please verify your wallet manually
+                </h2>
+                <Button
+                  state={signState}
+                  onClick={onSignClick}
+                  className="btn-primary"
+                >
+                  Verify wallet
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-      {publicKey && signState === "success" && data && (
-        <ItemList items={data} />
+          )}
+        </div>
       )}
     </div>
   );

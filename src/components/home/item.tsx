@@ -18,7 +18,7 @@ export function Item({ data }: Props) {
   const collection = data.collectionName;
 
   return (
-    <div className="card shadow-xl bg-neutral">
+    <div className="card shadow-xl bg-neutral text-neutral-content">
       {data.imageUrl && (
         <figure className="relative h-80">
           <img

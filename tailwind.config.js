@@ -6,12 +6,12 @@ module.exports = {
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
   daisyui: {
     styled: true,
+    // If you change the default themes don't forget to update in globals and theme-toggle files
     themes: [
-      // first one will be the default theme
       "night",
+      "retro",
 
       // uncomment to enable
-      // "light",
       // "dark",
       // "cupcake",
       // "bumblebee",

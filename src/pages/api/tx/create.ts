@@ -7,9 +7,25 @@ import {
 } from "@solana/web3.js";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NETWORK } from "@utils/endpoints";
+import {
+  createAssociatedTokenAccountInstruction,
+  createTransferCheckedInstruction,
+  getAccount,
+  getAssociatedTokenAddress,
+  getMint,
+} from "@solana/spl-token";
+import { DEFAULT_TOKEN, DEFAULT_WALLET } from "@utils/globals";
 
 export type TxCreateData = {
   tx: string | null;
+};
+
+export type Input = {
+  payerAddress: string;
+  receiverAddress?: string;
+  amount?: number;
+  type: "sol" | "token";
+  tokenAddress?: string;
 };
 
 export default async function handler(
@@ -19,9 +35,11 @@ export default async function handler(
   if (req.method === "POST") {
     const {
       payerAddress,
-      receiverAddress = "9RsT8nDGkaAc8YvFfYr4Cc1spsq1y1jXenHPx9W91xcW",
-      amount = 0.01,
-    } = req.body;
+      receiverAddress = DEFAULT_WALLET,
+      amount = 1,
+      type = "sol",
+      tokenAddress = DEFAULT_TOKEN,
+    } = req.body as Input;
 
     const connection = new Connection(NETWORK);
 
@@ -30,14 +48,58 @@ export default async function handler(
 
     let transaction = new Transaction();
 
-    // Add an instruction to execute
-    transaction.add(
-      SystemProgram.transfer({
-        fromPubkey: payer,
-        toPubkey: receiver,
-        lamports: amount * LAMPORTS_PER_SOL,
-      })
-    );
+    if (type === "token") {
+      const splToken = new PublicKey(tokenAddress);
+      const mint = await getMint(connection, splToken);
+
+      let payerAta = await getAssociatedTokenAddress(
+        mint.address, // token
+        payer, // owner
+        false
+      );
+
+      let receiverAta = await getAssociatedTokenAddress(
+        mint.address, // token
+        receiver, // owner
+        false
+      );
+
+      try {
+        await getAccount(connection, receiverAta);
+      } catch (e) {
+        // Create ATA on behalf of receiver
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            payer,
+            receiverAta,
+            receiver,
+            mint.address
+          )
+        );
+      }
+
+      transaction.add(
+        createTransferCheckedInstruction(
+          payerAta, // from
+          mint.address, // mint
+          receiverAta, // to
+          payer, // from's owner
+          amount * 10 ** mint.decimals, // amount
+          mint.decimals // decimals
+        )
+      );
+    }
+
+    if (type === "sol") {
+      // Add a transfer instruction to execute
+      transaction.add(
+        SystemProgram.transfer({
+          fromPubkey: payer,
+          toPubkey: receiver,
+          lamports: amount * LAMPORTS_PER_SOL,
+        })
+      );
+    }
 
     const blockHash = (await connection.getLatestBlockhash("finalized"))
       .blockhash;
