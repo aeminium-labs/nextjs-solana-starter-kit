@@ -16,18 +16,24 @@ Fork, then clone the repo:
 git clone https://github.com/your-username/nextjs-solana-starter-kit.git
 ```
 
-Build package for dev mode. It will automatically watch any changes in `src/` forlder:
+Run NextJS in dev mode:
 
 ```
 npm run dev
 ```
 
-### Building and testing
+### Building and linting
 
-Build package:
+Build NextJS:
 
 ```
 npm run build
+```
+
+Check for linting errors:
+
+```
+npm run lint
 ```
 
 ### New Features
@@ -39,7 +45,7 @@ Please open an issue with a proposal for a new feature or refactoring before sta
 *   Open a new issue in the [Issue tracker](https://github.com/aeminium-labs/nextjs-solana-starter-kit/issues).
 *   Fork the repo.
 *   Create a new feature branch based off the `main` branch.
-*   Make sure TS check passes and there are no linting errors.
+*   Make sure there are no linting errors.
 *   Submit a pull request, referencing any issues it addresses.
 
 Please try to keep your pull request focused in scope and avoid including unrelated commits.
