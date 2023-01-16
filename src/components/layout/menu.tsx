@@ -1,15 +1,18 @@
-import { Button, ButtonState } from "@components/home/button";
+import { useWallet } from "@solana/wallet-adapter-react";
 import classNames from "classnames";
 
 type Props = {
   twitterHandle?: string;
-  txState: ButtonState;
-  onTxClick: Function;
   className?: string;
 };
 
-export function Menu({ twitterHandle, txState, onTxClick, className }: Props) {
+export function Menu({ twitterHandle, className }: Props) {
+  const { connected } = useWallet();
   const menuClasses = classNames("menu", className);
+
+  if (!connected) {
+    return null;
+  }
 
   return (
     <ul className={menuClasses}>
@@ -30,7 +33,7 @@ export function Menu({ twitterHandle, txState, onTxClick, className }: Props) {
           htmlFor="bonk-modal"
           className="btn-ghost lg:btn mb-1 lg:mr1 lg:mb-0"
         >
-          Send Bonk
+          Send $Bonk
         </label>
       </li>
       <li>

@@ -21,48 +21,57 @@ export function HomeContent() {
     }
   }, [signState, publicKey]);
 
-  const onSignClick = async () => {
-    if (publicKey && signMessage && signState !== "loading") {
-      setSignState("loading");
-      const signToastId = toast.loading("Signing message...");
+  // This will request a signature automatically but you can have a separate button for that
+  React.useEffect(() => {
+    async function sign() {
+      if (publicKey && signMessage && signState === "initial") {
+        setSignState("loading");
+        const signToastId = toast.loading("Signing message...");
 
-      try {
-        // Encode anything as bytes
-        const messageStr = "This can be anything you want!";
-        const message = new TextEncoder().encode(messageStr);
+        try {
+          // Encode anything as bytes
+          const messageStr = "This can be anything you want!";
+          const message = new TextEncoder().encode(messageStr);
 
-        // Sign the bytes using the wallet
-        const signature = await signMessage(message);
-        const publicKeyStr = publicKey.toBase58();
+          // Sign the bytes using the wallet
+          const signature = await signMessage(message);
+          const publicKeyStr = publicKey.toBase58();
 
-        const data = {
-          publicKeyStr,
-          encodedSignature: bs58.encode(signature),
-          messageStr,
-        };
+          const data = {
+            publicKeyStr,
+            encodedSignature: bs58.encode(signature),
+            messageStr,
+          };
 
-        let response = await fetch("/api/sign", {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
-        });
+          let response = await fetch("/api/sign", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: { "Content-type": "application/json; charset=UTF-8" },
+          });
 
-        if (response.status === 200) {
-          setSignState("success");
-          toast.success("Message signed", { id: signToastId });
-        } else {
+          if (response.status === 200) {
+            setSignState("success");
+            toast.success("Message signed", { id: signToastId });
+          } else {
+            setSignState("error");
+            toast.error("Error verifying wallet, please reconnect wallet", {
+              id: signToastId,
+            });
+          }
+        } catch (error: any) {
           setSignState("error");
-          toast.error("Error verifying wallet, please try again", {
+          toast.error("Error verifying wallet, please reconnect wallet", {
             id: signToastId,
           });
         }
-      } catch (error: any) {
-        setSignState("error");
-        toast.error("Error verifying wallet, please try again", {
-          id: signToastId,
-        });
       }
     }
+
+    sign();
+  }, [signState, signMessage, publicKey]);
+
+  const onSignClick = () => {
+    setSignState("initial");
   };
 
   if (error) {
@@ -80,27 +89,30 @@ export function HomeContent() {
   return (
     <div className="grid grid-cols-1">
       <div className="text-center">
-        {publicKey ? (
-          signState !== "success" && (
-            <div className="card border-2 border-primary mb-5">
-              <div className="card-body items-center text-center">
-                <h2 className="card-title text-center mb-2">
-                  Please verify your wallet to see items
-                </h2>
-                <Button
-                  state={signState}
-                  onClick={onSignClick}
-                  className="btn-primary"
-                >
-                  Verify wallet
-                </Button>
-              </div>
+        {!publicKey && (
+          <div className="card border-2 border-primary mb-5">
+            <div className="card-body items-center text-center">
+              <h2 className="card-title text-center mb-2">
+                Please connect your wallet to get a list of your NFTs
+              </h2>
             </div>
-          )
-        ) : (
-          <p className="p-4">
-            Please connect your wallet to get a list of your NFTs
-          </p>
+          </div>
+        )}
+        {publicKey && signState === "error" && (
+          <div className="card border-2 border-primary mb-5">
+            <div className="card-body items-center text-center">
+              <h2 className="card-title text-center mb-2">
+                Please verify your wallet manually
+              </h2>
+              <Button
+                state={signState}
+                onClick={onSignClick}
+                className="btn-primary"
+              >
+                Verify wallet
+              </Button>
+            </div>
+          </div>
         )}
       </div>
       {publicKey && signState === "success" && data && (

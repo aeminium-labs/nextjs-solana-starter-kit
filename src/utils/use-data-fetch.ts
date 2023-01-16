@@ -1,4 +1,5 @@
-import useSWR, { Key, SWRConfiguration } from "swr";
+import { Key, SWRConfiguration } from "swr";
+import useSWRImmutable from "swr/immutable";
 
 export async function fetcher<T>(url: string) {
   const res = await fetch(url);
@@ -9,5 +10,7 @@ export function useDataFetch<Data, Error = any>(
   key: Key,
   config?: SWRConfiguration
 ) {
-  return useSWR<Data, Error>(key, fetcher, config);
+  // Using SWRImmutable here to avoid refetch on stale/focus/reconnect
+  // https://swr.vercel.app/docs/revalidation#disable-automatic-revalidations
+  return useSWRImmutable<Data, Error>(key, fetcher, config);
 }

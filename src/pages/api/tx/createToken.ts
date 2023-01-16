@@ -1,11 +1,4 @@
-import {
-  Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-} from "@solana/web3.js";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NETWORK } from "@utils/endpoints";
 import {

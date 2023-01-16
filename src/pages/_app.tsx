@@ -17,7 +17,7 @@ const ReactUIWalletModalProviderDynamic = dynamic(
 );
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], [NETWORK]);
+  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
   return (
     <ConnectionProvider endpoint={NETWORK}>

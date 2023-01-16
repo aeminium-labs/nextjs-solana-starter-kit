@@ -43,7 +43,7 @@ export function Modal({
               <span className="label-text">Amount</span>
             </label>
             <input
-              type="text"
+              type="number"
               placeholder="1"
               className="input input-bordered w-full"
               onChange={(ev) => setAmount(ev.currentTarget.value)}

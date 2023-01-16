@@ -5,7 +5,7 @@ import { Header } from "@components/layout/header";
 import { PageContainer } from "@components/layout/page-container";
 import { HomeContent } from "@components/home/home-content";
 import { DrawerContainer } from "@components/layout/drawer-container";
-import { Button, ButtonState } from "@components/home/button";
+import { ButtonState } from "@components/home/button";
 import { Menu } from "@components/layout/menu";
 import { TwitterResponse } from "@pages/api/twitter/[key]";
 import { TxConfirmData } from "@pages/api/tx/confirm";
@@ -16,12 +16,13 @@ import { PublicKey, Transaction } from "@solana/web3.js";
 import { useDataFetch } from "@utils/use-data-fetch";
 import { toast } from "react-hot-toast";
 import { Modal } from "@components/layout/modal";
+import { Footer } from "@components/layout/footer";
 
 const Home: NextPage = () => {
-  const { publicKey, signTransaction } = useWallet();
+  const { publicKey, signTransaction, connected } = useWallet();
 
   const { data } = useDataFetch<TwitterResponse>(
-    publicKey ? `/api/twitter/${publicKey}` : null
+    connected && publicKey ? `/api/twitter/${publicKey}` : null
   );
 
   const twitterHandle = data && data.handle;
@@ -39,7 +40,7 @@ const Home: NextPage = () => {
       amount?: string;
     }) =>
     async () => {
-      if (publicKey && signTransaction && txState !== "loading") {
+      if (connected && publicKey && signTransaction && txState !== "loading") {
         setTxState("loading");
         const buttonToastId = toast.loading("Creating transaction...", {
           id: `buttonToast${isToken ? "Token" : ""}`,
@@ -150,19 +151,14 @@ const Home: NextPage = () => {
       </Head>
       <DrawerContainer>
         <PageContainer>
-          <Header
-            twitterHandle={twitterHandle}
-            txState={txState}
-            onTxClick={onTxClick}
-          />
+          <Header twitterHandle={twitterHandle} />
           <HomeContent />
+          <Footer />
         </PageContainer>
         <div className="drawer-side">
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <Menu
             twitterHandle={twitterHandle}
-            txState={txState}
-            onTxClick={onTxClick}
             className="p-4 w-80 bg-base-100 text-base-content"
           />
         </div>

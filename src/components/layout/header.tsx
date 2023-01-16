@@ -5,11 +5,9 @@ import React from "react";
 
 type Props = {
   twitterHandle?: string;
-  txState: ButtonState;
-  onTxClick: Function;
 };
 
-export function Header({ twitterHandle, txState, onTxClick }: Props) {
+export function Header({ twitterHandle }: Props) {
   return (
     <div className="navbar mb-6 shadow-lg bg-neutral text-neutral-content rounded-box">
       <div className="navbar-start">
@@ -22,8 +20,6 @@ export function Header({ twitterHandle, txState, onTxClick }: Props) {
         <div className="hidden lg:block">
           <Menu
             twitterHandle={twitterHandle}
-            txState={txState}
-            onTxClick={onTxClick}
             className="menu-horizontal px-1"
           />
         </div>
