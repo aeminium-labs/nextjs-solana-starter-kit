@@ -17,7 +17,7 @@ import {
 import { DEFAULT_TOKEN, DEFAULT_WALLET } from "@utils/globals";
 
 export type TxCreateData = {
-  tx: string | null;
+  tx: string;
 };
 
 export type Input = {
@@ -116,6 +116,6 @@ export default async function handler(
 
     res.status(200).json({ tx: transactionBase64 });
   } else {
-    res.status(405).json({ tx: null });
+    res.status(405).json({ tx: "" });
   }
 }

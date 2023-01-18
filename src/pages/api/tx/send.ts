@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { NETWORK } from "@utils/endpoints";
 
 export type TxSendData = {
-  txSignature: string | null;
+  txSignature: string;
 };
 
 export default async function handler(
@@ -20,6 +20,6 @@ export default async function handler(
 
     res.status(200).json({ txSignature });
   } else {
-    res.status(405).json({ txSignature: null });
+    res.status(405).json({ txSignature: "" });
   }
 }
