@@ -13,7 +13,7 @@ import { TxCreateData } from "@pages/api/tx/create";
 import { TxSendData } from "@pages/api/tx/send";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
-import { useDataFetch } from "@utils/use-data-fetch";
+import { fetcher, useDataFetch } from "@utils/use-data-fetch";
 import { toast } from "react-hot-toast";
 import { Modal } from "@components/layout/modal";
 import { Footer } from "@components/layout/footer";
@@ -48,88 +48,72 @@ const Home: NextPage = () => {
 
         try {
           // Create transaction
-          let txCreateResponse = await fetch("/api/tx/create", {
+          let { tx: txCreateResponse } = await fetcher<TxCreateData>(
+            "/api/tx/create",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                payerAddress: publicKey.toBase58(),
+                receiverAddress: address
+                  ? new PublicKey(address).toBase58()
+                  : undefined,
+                amount: amount,
+                type: isToken ? "token" : "sol",
+              }),
+              headers: { "Content-type": "application/json; charset=UTF-8" },
+            }
+          );
+
+          const tx = Transaction.from(Buffer.from(txCreateResponse, "base64"));
+
+          // Request signature from wallet
+          const signedTx = await signTransaction(tx);
+          const signedTxBase64 = signedTx.serialize().toString("base64");
+
+          // Send signed transaction
+          let { txSignature } = await fetcher<TxSendData>("/api/tx/send", {
             method: "POST",
-            body: JSON.stringify({
-              payerAddress: publicKey.toBase58(),
-              receiverAddress: address
-                ? new PublicKey(address).toBase58()
-                : undefined,
-              amount: amount,
-              type: isToken ? "token" : "sol",
-            }),
+            body: JSON.stringify({ signedTx: signedTxBase64 }),
             headers: { "Content-type": "application/json; charset=UTF-8" },
           });
 
-          if (txCreateResponse.status === 200) {
-            const createData: TxCreateData = await txCreateResponse.json();
+          setTxState("success");
+          toast.success(
+            (t) => (
+              <a
+                href={`https://solscan.io/tx/${txSignature}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Transaction created
+              </a>
+            ),
+            { id: buttonToastId, duration: 10000 }
+          );
 
-            if (createData.tx !== null) {
-              const tx = Transaction.from(Buffer.from(createData.tx, "base64"));
+          const confirmationToastId = toast.loading(
+            "Confirming transaction..."
+          );
 
-              // Request signature from wallet
-              const signedTx = await signTransaction(tx);
-              const signedTxBase64 = signedTx.serialize().toString("base64");
-
-              // Send signed transaction
-              let txSendResponse = await fetch("/api/tx/send", {
-                method: "POST",
-                body: JSON.stringify({ signedTx: signedTxBase64 }),
-                headers: { "Content-type": "application/json; charset=UTF-8" },
-              });
-
-              if (txSendResponse.status === 200) {
-                setTxState("success");
-                const sendData: TxSendData = await txSendResponse.json();
-                if (sendData.txSignature !== null) {
-                  toast.success(
-                    (t) => (
-                      <a
-                        href={`https://solscan.io/tx/${sendData.txSignature}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Transaction created
-                      </a>
-                    ),
-                    { id: buttonToastId, duration: 10000 }
-                  );
-
-                  const confirmationToastId = toast.loading(
-                    "Confirming transaction..."
-                  );
-
-                  const confirmationResponse = await fetch("/api/tx/confirm", {
-                    method: "POST",
-                    body: JSON.stringify({ txSignature: sendData.txSignature }),
-                    headers: {
-                      "Content-type": "application/json; charset=UTF-8",
-                    },
-                  });
-
-                  const confirmationData: TxConfirmData =
-                    await confirmationResponse.json();
-
-                  if (confirmationData.confirmed) {
-                    toast.success("Transaction confirmed", {
-                      id: confirmationToastId,
-                    });
-                  } else {
-                    toast.success("Error confirming transaction", {
-                      id: confirmationToastId,
-                    });
-                  }
-                }
-              } else {
-                setTxState("error");
-                toast.error("Error creating transaction", {
-                  id: buttonToastId,
-                });
-              }
+          const confirmationResponse = await fetcher<TxConfirmData>(
+            "/api/tx/confirm",
+            {
+              method: "POST",
+              body: JSON.stringify({ txSignature }),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
             }
+          );
+
+          if (confirmationResponse.confirmed) {
+            toast.success("Transaction confirmed", {
+              id: confirmationToastId,
+            });
           } else {
-            setTxState("error");
-            toast.error("Error creating transaction", { id: buttonToastId });
+            toast.success("Error confirming transaction", {
+              id: confirmationToastId,
+            });
           }
         } catch (error: any) {
           setTxState("error");
